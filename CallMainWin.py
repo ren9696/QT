@@ -54,7 +54,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         # 在状态栏显示文件地址
         self.statusbar.showMessage(file)
 
-#设置页面类
+#设置页面的类
 class SettingForm(QWidget, Ui_SettingWindow):
     def __init__(self):
         super(SettingForm, self).__init__()
