@@ -38,11 +38,12 @@ class MainForm(QMainWindow, Ui_MainWindow):
 
         #设置界面信号
         #温度复选框
-        self.setting.checkBox_12.stateChanged.connect(lambda:self.showdata.adddatawin(self.setting.checkBox_12))
+        self.setting.checkBox_12.stateChanged.connect(lambda:self.showdata.adddatawin(self.setting.checkBox_12,'温度'))
+        self.setting.checkBox_11.stateChanged.connect(lambda:self.showdata.adddatawin(self.setting.checkBox_11,'湿度'))
 
         # 设置按钮按下，加载设置界面
         self.SettingButton.clicked.connect(self.SettingShow)
-#        self.setting.lineEdit_addr.selectionChanged.connect(self.showdata.)
+        # self.setting.lineEdit_addr.selectionChanged.connect(self.showdata.)
 
         # 显示界面信号
         # 显示按钮按下，加载数据显示界面
@@ -212,9 +213,12 @@ class ShowDataForm(QWidget, Ui_ShowdataWindow):
         self.label_7.setText("aaa")
 
     # 添加窗口
-    def adddatawin(self,str):
-        if str.isChecked():
-            print('aaa')
+    def adddatawin(self,boj,str):
+        if boj.isChecked():
+            if str == '温度':
+                print(str)
+            if str == '湿度':
+                print(str)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
