@@ -17,7 +17,9 @@ from PyQt5.QtWidgets import QMessageBox
 # 折叠所有区域代码的快捷键：ctrl+k, ctrl+0;
 # 自动格式化代码的快捷键：ctrl+k, ctrl+f;
 
-#主界面的类
+# 主界面的类
+
+
 class MainForm(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainForm, self).__init__()
@@ -33,10 +35,14 @@ class MainForm(QMainWindow, Ui_MainWindow):
         # 菜单的点击事件，当点击打开菜单时连接槽函数 openMsg()
         self.fileOpenAction.triggered.connect(self.openMsg)
 
-        # 设置界面信号
+
+        #设置界面信号
+        #温度复选框
+        self.setting.checkBox_12.stateChanged.connect(lambda:self.showdata.adddatawin(self.setting.checkBox_12))
+
         # 设置按钮按下，加载设置界面
         self.SettingButton.clicked.connect(self.SettingShow)
-        #self.setting.lineEdit_2.
+#        self.setting.lineEdit_addr.selectionChanged.connect(self.showdata.)
 
         # 显示界面信号
         # 显示按钮按下，加载数据显示界面
@@ -51,13 +57,13 @@ class MainForm(QMainWindow, Ui_MainWindow):
     def SettingShow(self):
         # 添加子窗口
         self.MaingridLayout.addWidget(self.setting)
-        self.showdata.hide()
+        self.showdata.close()
         self.setting.show()
 
     def DataShow(self):
         # 添加子窗口
         self.MaingridLayout.addWidget(self.showdata)
-        self.setting.hide()
+        self.setting.close()
         self.showdata.show()
 
     def openMsg(self):
@@ -90,7 +96,7 @@ class SettingForm(QWidget, Ui_SettingWindow):
         self.pushButton_get_device.clicked.connect(
             self.connect_device)  # 获取设备信息按钮
 
-        #self.pushButton_6.clicked.connect(self.setshowdatatype)
+        # self.pushButton_6.clicked.connect(self.setshowdatatype)
 
     # 检测串口
     def port_check(self):
@@ -183,34 +189,32 @@ class SettingForm(QWidget, Ui_SettingWindow):
         self.settingsignal.emit()
         print('send signal')
 
-    #发送数据
-    def Serial_send_data(self,data):
+    # 发送数据
+    def Serial_send_data(self, data):
         self.send_data = bytes.fromhex(self.Get_CRC(data))
         self.ser.write(self.send_data)
 
-    #接收数据
-    def Serial_revice_data(self,data):
+    # 接收数据
+    def Serial_revice_data(self, data):
         pass
 
 # 显示类
+
+
 class ShowDataForm(QWidget, Ui_ShowdataWindow):
     def __init__(self):
         super(ShowDataForm, self).__init__()
-        self.settingboj = SettingForm()
+        #self.settingboj = SettingForm()
         self.setupUi(self)
 
-    #加载需要显示的数据
+    # 加载需要显示的数据
     def test_singal(self):
         self.label_7.setText("aaa")
 
     # 添加窗口
-    def adddatawin(self):
-        pass
-
-
-
-
-
+    def adddatawin(self,str):
+        if str.isChecked():
+            print('aaa')
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
