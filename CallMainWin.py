@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
 from MainWindow import Ui_MainWindow
 from SettingWindow import Ui_SettingWindow
@@ -32,11 +33,16 @@ class MainForm(QMainWindow, Ui_MainWindow):
         # 菜单的点击事件，当点击打开菜单时连接槽函数 openMsg()
         self.fileOpenAction.triggered.connect(self.openMsg)
 
+        # 设置界面信号
         # 设置按钮按下，加载设置界面
         self.SettingButton.clicked.connect(self.SettingShow)
+        #self.setting.lineEdit_2.
 
+        # 显示界面信号
         # 显示按钮按下，加载数据显示界面
         self.ShowDataButton.clicked.connect(self.DataShow)
+
+        self.setting.pushButton_6.clicked.connect(self.showdata.test_singal)
 
         self.DataShow()
         # 点击actionTst,子窗口就会显示在主窗口的MaingridLayout中
@@ -65,6 +71,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
 class SettingForm(QWidget, Ui_SettingWindow):
     def __init__(self):
         super(SettingForm, self).__init__()
+
         self.setupUi(self)
         self.setWindowTitle("设置")
         self.ser = serial.Serial()
@@ -83,7 +90,7 @@ class SettingForm(QWidget, Ui_SettingWindow):
         self.pushButton_get_device.clicked.connect(
             self.connect_device)  # 获取设备信息按钮
 
-        # self.checkBox_12.stateChanged.connect()
+        #self.pushButton_6.clicked.connect(self.setshowdatatype)
 
     # 检测串口
     def port_check(self):
@@ -110,12 +117,7 @@ class SettingForm(QWidget, Ui_SettingWindow):
             except:
                 QMessageBox.critical(self, "Port Error", "此串口不能被打开！")
                 self.ser.close()
-            self.testdata = '00 03 10 00 00 02'
-            self.testdata = self.Get_CRC(self.testdata)
-            self.send_data = bytes.fromhex(self.testdata)
-
-            self.ser.write(self.send_data)
-            # print('发送完成')
+            self.Serial_send_data('00 03 10 00 00 02')
 
             self.read = self.ser.read(11)
             # print(self.read)
@@ -177,17 +179,37 @@ class SettingForm(QWidget, Ui_SettingWindow):
         # print('增加Modbus CRC16校验：>>>',read)
         return read
 
+    def Set_seoner_show_type(self):
+        self.settingsignal.emit()
+        print('send signal')
+
+    #发送数据
+    def Serial_send_data(self,data):
+        self.send_data = bytes.fromhex(self.Get_CRC(data))
+        self.ser.write(self.send_data)
+
+    #接收数据
+    def Serial_revice_data(self,data):
+        pass
 
 # 显示类
 class ShowDataForm(QWidget, Ui_ShowdataWindow):
     def __init__(self):
         super(ShowDataForm, self).__init__()
+        self.settingboj = SettingForm()
         self.setupUi(self)
-        # self.pushButton.clicked.connect()
+
+    #加载需要显示的数据
+    def test_singal(self):
+        self.label_7.setText("aaa")
 
     # 添加窗口
     def adddatawin(self):
         pass
+
+
+
+
 
 
 if __name__ == "__main__":
